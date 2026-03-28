@@ -1,0 +1,49 @@
+/Users/gunturuvarsha/Downloads/UG4_Sem8/Gen AI _361/Food APP/venv/lib/python3.9/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+ * Serving Flask app 'app'
+ * Debug mode: off
+[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:3000
+[33mPress CTRL+C to quit[0m
+127.0.0.1 - - [28/Mar/2026 17:44:06] "[32mGET /register HTTP/1.1[0m" 302 -
+127.0.0.1 - - [28/Mar/2026 17:44:06] "[36mGET /dashboard HTTP/1.1[0m" 304 -
+127.0.0.1 - - [28/Mar/2026 17:44:06] "GET /css/styles.css HTTP/1.1" 200 -
+127.0.0.1 - - [28/Mar/2026 17:44:06] "GET /js/dashboard.js HTTP/1.1" 200 -
+127.0.0.1 - - [28/Mar/2026 17:44:06] "GET /api/user/me HTTP/1.1" 200 -
+127.0.0.1 - - [28/Mar/2026 17:44:06] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+127.0.0.1 - - [28/Mar/2026 17:44:07] "GET /api/scans/history HTTP/1.1" 200 -
+127.0.0.1 - - [28/Mar/2026 17:44:15] "POST /api/auth/logout HTTP/1.1" 200 -
+127.0.0.1 - - [28/Mar/2026 17:44:15] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [28/Mar/2026 17:44:15] "[36mGET /css/styles.css HTTP/1.1[0m" 304 -
+127.0.0.1 - - [28/Mar/2026 17:44:22] "GET /register HTTP/1.1" 200 -
+127.0.0.1 - - [28/Mar/2026 17:44:22] "[36mGET /css/styles.css HTTP/1.1[0m" 304 -
+127.0.0.1 - - [28/Mar/2026 17:44:22] "GET /js/auth.js HTTP/1.1" 200 -
+127.0.0.1 - - [28/Mar/2026 17:44:37] "[35m[1mPOST /api/auth/register HTTP/1.1[0m" 201 -
+127.0.0.1 - - [28/Mar/2026 17:44:38] "[36mGET /dashboard HTTP/1.1[0m" 304 -
+127.0.0.1 - - [28/Mar/2026 17:44:38] "[36mGET /js/dashboard.js HTTP/1.1[0m" 304 -
+127.0.0.1 - - [28/Mar/2026 17:44:38] "[36mGET /css/styles.css HTTP/1.1[0m" 304 -
+127.0.0.1 - - [28/Mar/2026 17:44:38] "GET /api/user/me HTTP/1.1" 200 -
+127.0.0.1 - - [28/Mar/2026 17:44:38] "GET /api/scans/history HTTP/1.1" 200 -
+127.0.0.1 - - [28/Mar/2026 17:45:10] "[36mGET /dashboard HTTP/1.1[0m" 304 -
+127.0.0.1 - - [28/Mar/2026 17:45:10] "[36mGET /js/dashboard.js HTTP/1.1[0m" 304 -
+127.0.0.1 - - [28/Mar/2026 17:45:10] "[36mGET /css/styles.css HTTP/1.1[0m" 304 -
+127.0.0.1 - - [28/Mar/2026 17:45:10] "GET /api/user/me HTTP/1.1" 200 -
+127.0.0.1 - - [28/Mar/2026 17:45:10] "GET /api/scans/history HTTP/1.1" 200 -
+127.0.0.1 - - [28/Mar/2026 17:47:27] "POST /api/user/dietary HTTP/1.1" 200 -
+127.0.0.1 - - [28/Mar/2026 17:48:29] "POST /api/food/scan HTTP/1.1" 200 -
+127.0.0.1 - - [28/Mar/2026 17:49:18] "[36mGET /dashboard HTTP/1.1[0m" 304 -
+127.0.0.1 - - [28/Mar/2026 17:49:18] "[36mGET /css/styles.css HTTP/1.1[0m" 304 -
+127.0.0.1 - - [28/Mar/2026 17:49:18] "[36mGET /js/dashboard.js HTTP/1.1[0m" 304 -
+127.0.0.1 - - [28/Mar/2026 17:49:18] "GET /api/user/me HTTP/1.1" 200 -
+127.0.0.1 - - [28/Mar/2026 17:49:18] "GET /api/scans/history HTTP/1.1" 200 -
+127.0.0.1 - - [28/Mar/2026 17:51:02] "POST /api/food/scan HTTP/1.1" 200 -
+127.0.0.1 - - [28/Mar/2026 17:51:09] "POST /api/food/scan HTTP/1.1" 200 -
+127.0.0.1 - - [28/Mar/2026 17:53:08] "GET /dashboard HTTP/1.1" 200 -
+127.0.0.1 - - [28/Mar/2026 17:53:09] "[36mGET /css/styles.css HTTP/1.1[0m" 304 -
+127.0.0.1 - - [28/Mar/2026 17:53:09] "[36mGET /js/dashboard.js HTTP/1.1[0m" 304 -
+127.0.0.1 - - [28/Mar/2026 17:53:09] "GET /api/user/me HTTP/1.1" 200 -
+127.0.0.1 - - [28/Mar/2026 17:53:09] "GET /api/scans/history HTTP/1.1" 200 -
+127.0.0.1 - - [28/Mar/2026 17:53:23] "POST /api/user/dietary HTTP/1.1" 200 -
+127.0.0.1 - - [28/Mar/2026 17:53:38] "POST /api/food/scan HTTP/1.1" 200 -
+127.0.0.1 - - [28/Mar/2026 17:54:01] "POST /api/food/scan HTTP/1.1" 200 -
+127.0.0.1 - - [28/Mar/2026 17:54:17] "POST /api/food/scan HTTP/1.1" 200 -

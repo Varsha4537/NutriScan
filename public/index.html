@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NutriScan — AI Food Scanner & Ingredient Analyzer</title>
+  <meta name="description" content="Scan any food label and instantly get ingredient breakdowns, health scores, and smarter alternatives tailored to your dietary profile." />
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+
+  <!-- ── Navbar ─────────────────────────────────────────── -->
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <div class="logo-icon">🥗</div>
+      NutriScan
+    </div>
+    <div class="navbar-links">
+      <button class="btn-nav-outline" onclick="location.href='/login'" id="login-btn">Log In</button>
+      <button class="btn btn-primary" onclick="location.href='/register'" id="start-btn">Get Started</button>
+    </div>
+  </nav>
+
+  <!-- ── Hero ───────────────────────────────────────────── -->
+  <section class="hero">
+    <div class="hero-badge">✨ AI-Powered Food Intelligence</div>
+
+    <h1>Scan. Understand.<br/>Eat Smarter.</h1>
+
+    <p>
+      Upload any food label or capture an image. NutriScan's AI evaluates
+      ingredients against your dietary profile and suggests healthier, 
+      budget-friendly alternatives — in seconds.
+    </p>
+
+    <div class="hero-actions">
+      <button class="btn btn-primary btn-lg pulse" onclick="location.href='/register'" id="hero-cta">
+        🚀 Start Scanning Free
+      </button>
+      <button class="btn btn-secondary btn-lg" onclick="location.href='/login'" id="hero-login">
+        Log into my account
+      </button>
+    </div>
+
+    <!-- ── Feature Cards ──────────────────────────────── -->
+    <div class="features-grid">
+      <div class="feature-card">
+        <span class="feature-icon">🔍</span>
+        <h3>Ingredient Analysis</h3>
+        <p>AI reads every ingredient, flags hidden additives, and explains what they mean for your health.</p>
+      </div>
+      <div class="feature-card">
+        <span class="feature-icon">🥦</span>
+        <h3>Dietary Matching</h3>
+        <p>Set your profile (vegan, gluten-free, keto, etc.) and receive instant compatibility checks.</p>
+      </div>
+      <div class="feature-card">
+        <span class="feature-icon">🔁</span>
+        <h3>Smart Alternatives</h3>
+        <p>Get curated, healthier product replacements with direct links — no more manual searching.</p>
+      </div>
+      <div class="feature-card">
+        <span class="feature-icon">📊</span>
+        <h3>Health Scores</h3>
+        <p>Every product gets a 0–100 score and letter grade so you can compare at a glance.</p>
+      </div>
+    </div>
+  </section>
+
+</body>
+</html>

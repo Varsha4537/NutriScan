@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Create Account — NutriScan</title>
+  <meta name="description" content="Create your free NutriScan account and start scanning food labels with AI." />
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body class="auth-page">
+
+  <div class="auth-card">
+    <div class="auth-header">
+      <div class="auth-logo">🥗</div>
+      <h1>Create your account</h1>
+      <p>Free forever — no credit card needed</p>
+    </div>
+
+    <form class="auth-form" id="register-form" novalidate>
+      <div id="register-alert" class="alert alert-error" role="alert"></div>
+
+      <div class="form-group">
+        <label class="form-label" for="name">Full name</label>
+        <input
+          class="form-control" type="text" id="name"
+          name="name" placeholder="Varsha Gunturu"
+          autocomplete="name" required />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="email">Email address</label>
+        <input
+          class="form-control" type="email" id="email"
+          name="email" placeholder="you@example.com"
+          autocomplete="email" required />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="password">Password</label>
+        <input
+          class="form-control" type="password" id="password"
+          name="password" placeholder="At least 6 characters"
+          autocomplete="new-password" required />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="confirm">Confirm password</label>
+        <input
+          class="form-control" type="password" id="confirm"
+          name="confirm" placeholder="Repeat your password"
+          autocomplete="new-password" required />
+      </div>
+
+      <!-- Mandatory Dietary Profile -->
+      <div class="form-group" style="margin-top: 24px;">
+        <label class="form-label">Dietary Profile (Mandatory)</label>
+        <div style="display: flex; gap: 12px; margin-top: 8px;">
+          <label style="flex: 1; cursor: pointer;">
+            <input type="radio" name="diet-type" value="vegetarian" style="display: none;" id="diet-veg">
+            <div class="diet-onboarding-pill" onclick="this.parentElement.querySelector('input').checked=true; updateDietSelection();">🥕 Veg</div>
+          </label>
+          <label style="flex: 1; cursor: pointer;">
+            <input type="radio" name="diet-type" value="vegan" style="display: none;" id="diet-vegan">
+            <div class="diet-onboarding-pill" onclick="this.parentElement.querySelector('input').checked=true; updateDietSelection();">🌱 Vegan</div>
+          </label>
+          <label style="flex: 1; cursor: pointer;">
+            <input type="radio" name="diet-type" value="non-vegetarian" style="display: none;" checked id="diet-nonveg">
+            <div class="diet-onboarding-pill active" onclick="this.parentElement.querySelector('input').checked=true; updateDietSelection();">🍖 Non-Veg</div>
+          </label>
+        </div>
+      </div>
+
+      <div class="form-group" style="margin-bottom: 24px;">
+        <label class="diet-option" style="padding: 12px; border: 1px solid var(--glass-border); border-radius: 12px; display: flex; align-items: center; gap: 12px; cursor: pointer;">
+          <input type="checkbox" id="gluten-free" style="width: 18px; height: 18px; cursor: pointer;">
+          <span style="font-size: 0.95rem; color: var(--text-main);">I am Gluten Intolerant (🌾 Gluten-Free)</span>
+        </label>
+      </div>
+
+      <script>
+        function updateDietSelection() {
+          document.querySelectorAll('.diet-onboarding-pill').forEach(el => {
+            el.classList.remove('active');
+            if (el.parentElement.querySelector('input').checked) {
+              el.classList.add('active');
+            }
+          });
+        }
+      </script>
+
+      <button class="btn btn-primary btn-block" type="submit" id="register-btn">
+        Create Account
+      </button>
+    </form>
+
+    <div class="auth-divider">or</div>
+
+    <div class="auth-footer">
+      Already have an account?
+      <a href="/login">Log in</a>
+    </div>
+  </div>
+
+  <script src="/js/auth.js"></script>
+</body>
+</html>
