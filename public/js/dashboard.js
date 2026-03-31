@@ -167,12 +167,17 @@
       const data = await ApiService.scanImage(formData);
       document.getElementById('scan-loading').style.display = 'none';
       scanBtn.disabled = false;
-      renderResults(data);
-      addToHistory(data, file.name || 'Image Scan');
-    } catch {
+      
+      if (data.partial) {
+        renderPartialResults(data);
+      } else {
+        renderResults(data);
+        addToHistory(data, file.name || 'Image Scan');
+      }
+    } catch (err) {
       document.getElementById('scan-loading').style.display = 'none';
       scanBtn.disabled = false;
-      alert('Scan failed. Please try again.');
+      alert(err.message || 'Scan failed. Please try again.');
     }
   });
 
@@ -192,13 +197,18 @@
       const data = await ApiService.scanText(text);
       document.getElementById('scan-loading').style.display = 'none';
       manualBtn.disabled = false;
-      renderResults(data);
-      manualInput.value = ''; // clear
-      addToHistory(data, `Text: ${text.substring(0,20)}...`);
-    } catch {
+      
+      if (data.partial) {
+        renderPartialResults(data);
+      } else {
+        renderResults(data);
+        manualInput.value = ''; // clear
+        addToHistory(data, `Text: ${text.substring(0,20)}...`);
+      }
+    } catch (err) {
       document.getElementById('scan-loading').style.display = 'none';
       manualBtn.disabled = false;
-      alert('Scan failed. Please try again.');
+      alert(err.message || 'Scan failed. Please try again.');
     }
   });
 
@@ -344,6 +354,31 @@
     resSec.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
+  function renderPartialResults(d) {
+    const resSec = document.getElementById('results-section');
+    resSec.classList.add('show');
+
+    resSec.innerHTML = `
+      <div class="glass-panel" style="background:var(--bg-secondary); border: 2px dashed var(--warning); padding:24px;">
+        <div style="display:flex; align-items:center; gap:12px; margin-bottom:16px;">
+          <span style="font-size:2rem;">⚠️</span>
+          <div>
+            <h3 style="margin:0; color:var(--warning);">Partial Analysis</h3>
+            <p style="margin:0; font-size:0.9rem; opacity:0.8;">${d.error || 'AI analysis failed, but we extracted text.'}</p>
+          </div>
+        </div>
+        <div style="background:rgba(0,0,0,0.2); padding:16px; border-radius:8px;">
+          <h4 style="margin-top:0; font-size:0.85rem; text-transform:uppercase; opacity:0.6;">Extracted Ingredients</h4>
+          <p style="margin-bottom:0; font-family:monospace; font-size:0.9rem; line-height:1.5;">${d.raw_text}</p>
+        </div>
+        <p style="margin-top:16px; font-size:0.85rem; color:var(--text-muted);">
+          Tip: Try a clearer photo or copy-pasting the text above into the manual entry box.
+        </p>
+      </div>
+    `;
+    resSec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
   // ══ Scan History ═════════════════════════════════════════════════
   async function loadScanHistory() {
     try {
@@ -379,6 +414,15 @@
         </div>
       </div>
     `}).join('');
+  }
+
+  /**
+   * Adds a new scan to the history list by refreshing from server.
+   * Called after successful scan in both image and manual text flows.
+   */
+  async function addToHistory(data, filename) {
+    if (data.partial) return; // Don't add partial results to permanent history
+    await loadScanHistory();
   }
 
   // ══ Dietary Profile ══════════════════════════════════════════════

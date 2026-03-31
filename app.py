@@ -10,6 +10,7 @@ import json
 import requests
 from openai import OpenAI
 from dotenv import load_dotenv
+import time
 from flask_sqlalchemy import SQLAlchemy
 
 load_dotenv()
@@ -227,21 +228,54 @@ client = OpenAI(
 )
 
 def extract_text_via_ocr(file) -> str:
-    """Sends image to OCR.space and extracts text."""
+    """Sends image to OCR.space and extracts text with retries."""
     ocr_key = os.environ.get("OCR_SPACE_API_KEY", "helloworld")
-    try:
-        res = requests.post(
-            "https://api.ocr.space/parse/image",
-            files={"image": (file.filename, file.read(), file.content_type)},
-            data={"apikey": ocr_key, "language": "eng"}
-        )
-        ocr_data = res.json()
-        if ocr_data.get("ParsedResults"):
-            return ocr_data["ParsedResults"][0]["ParsedText"]
-        return ""
-    except Exception as e:
-        print(f"OCR Error: {str(e)}")
-        return ""
+    print(f"DEBUG: Using OCR Key starting with: {ocr_key[:5]}")
+    for attempt in range(3):
+        try:
+            # Important: Reset file pointer for each retry attempt
+            file.seek(0)
+            file_data = file.read()
+            import base64
+            base64_image = base64.b64encode(file_data).decode('utf-8')
+            
+            if len(file_data) < 100:
+                print(f"ERROR: File data too small.")
+                return ""
+
+            # Use base64 string upload which is sometimes more stable than multipart for small files
+            payload = {
+                "apikey": ocr_key,
+                "base64Image": f"data:{file.content_type};base64,{base64_image}",
+                "language": "eng",
+                "OCREngine": 2,      # Engine 2 is usually better for small/blurry text
+                "scale": True,
+                "isOverlayRequired": True # Forces more detailed analysis
+            }
+            
+            res = requests.post(
+                "https://api.ocr.space/parse/image",
+                data=payload,
+                timeout=30
+            )
+            res.raise_for_status()
+            ocr_data = res.json()
+            
+            # Check for OCR.space level errors
+            if ocr_data.get("IsErroredOnProcessing"):
+                err_msg = ocr_data.get("ErrorMessage") or "Unknown OCR Engine error"
+                print(f"OCR Attempt {attempt+1} Engine Error: {err_msg}")
+            elif ocr_data.get("ParsedResults"):
+                text = ocr_data["ParsedResults"][0]["ParsedText"]
+                if text and text.strip():
+                    return text.strip()
+            
+            # If we reach here, OCR succeeded but returned no text
+            if attempt < 2: time.sleep(1)
+        except Exception as e:
+            print(f"OCR Attempt {attempt+1} Error: {str(e)}")
+            if attempt < 2: time.sleep(1.5)
+    return ""
 
 GROK_ANALYSIS_PROMPT = """You are an expert food safety analyst.
 Product/Ingredients text: {text_val}
@@ -281,27 +315,36 @@ Provide a highly detailed analysis matching this JSON schema exactly:
 }}"""
 
 def analyze_ingredients(text_val: str, profile: list) -> dict:
-    """Calls Grok LLM to analyze ingredients against FDA/ISI standards."""
+    """Calls Grok LLM to analyze ingredients with retries and robust parsing."""
     if not client.api_key or client.api_key == "your_grok_api_key_here":
         raise ValueError("Please set XAI_API_KEY in the .env file.")
 
     prompt = GROK_ANALYSIS_PROMPT.format(text_val=text_val, profile=profile)
     
-    response = client.chat.completions.create(
-        model="llama-3.3-70b-versatile",
-        messages=[
-            {"role": "system", "content": "You are a JSON-only API. Print only valid JSON and no markdown formatting. Do not output anything before or after the JSON."},
-            {"role": "user", "content": prompt}
-        ],
-        temperature=0.3
-    )
-    val = response.choices[0].message.content.strip()
-    
-    if val.startswith("```json"): val = val[7:]
-    if val.startswith("```"): val = val[3:]
-    if val.endswith("```"): val = val[:-3]
-    
-    return json.loads(val.strip())
+    for attempt in range(2):
+        try:
+            response = client.chat.completions.create(
+                model="llama-3.3-70b-versatile",
+                messages=[
+                    {"role": "system", "content": "You are a JSON-only API. Print only valid JSON and no markdown formatting."},
+                    {"role": "user", "content": prompt}
+                ],
+                temperature=0.3,
+                timeout=25
+            )
+            val = response.choices[0].message.content.strip()
+            
+            # Clean possible markdown formatting
+            if "```" in val:
+                val = val.split("```")[1]
+                if val.startswith("json"): val = val[4:]
+            
+            return json.loads(val.strip())
+        except Exception as e:
+            print(f"LLM Attempt {attempt+1} Error: {str(e)}")
+            if attempt < 1: time.sleep(1)
+            
+    raise Exception("Grok API failed to analyze ingredients after retries.")
 
 # ─── APIs ─────────────────────────────────────────────────────────────────────
 @app.route("/api/food/scan", methods=["POST"])
@@ -344,8 +387,13 @@ def api_food_scan():
     except ValueError as ve:
         return jsonify({"error": str(ve)}), 500
     except Exception as e:
-        print(f"LLM Error: {str(e)}")
-        return jsonify({"error": "Grok API failed to analyze the ingredients."}), 500
+        print(f"Scan Final Error: {str(e)}")
+        # Partial Success: We have text but AI failed
+        return jsonify({
+            "partial": True,
+            "raw_text": text_val,
+            "error": "AI analysis failed, but we extracted the text below."
+        }), 200
 
 @app.route("/api/scans/history", methods=["GET"])
 @login_required
